@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="x-op-checksum" content="TWFnaWMgTnVtYmVyOiA0NjE0NTg5">
+    <meta name="x-build-rev" content="SPECTER-1.0.7-PROD">
+    <title>SPECTER // AUTHENTICATION REQUIRED</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Persistent FX layers -->
+    <canvas id="bg-canvas"></canvas>
+    <div class="crt-lines"></div>
+    <div id="noise-overlay"></div>
+
+    <!-- Scrolling alert strip -->
+    <div class="alert-strip" id="alert-strip">
+        <div class="alert-inner">
+            ⚠ PERIMETER BREACH DETECTED &nbsp;·&nbsp; CRYPTO-GATE ACTIVE &nbsp;·&nbsp; SESSION MONITORED &nbsp;·&nbsp;
+            INTRUSION LOGGED &nbsp;·&nbsp; NODE: 10.0.0.7 &nbsp;·&nbsp;
+            ⚠ PERIMETER BREACH DETECTED &nbsp;·&nbsp; CRYPTO-GATE ACTIVE &nbsp;·&nbsp; SESSION MONITORED &nbsp;·&nbsp;
+            INTRUSION LOGGED &nbsp;·&nbsp; NODE: 10.0.0.7 &nbsp;·&nbsp;
+        </div>
+    </div>
+
+    <!-- Stage Progress Bar -->
+    <div class="stage-nav" id="stage-nav">
+        <span class="sn-logo">SPECTER</span>
+        <div class="sn-stages">
+            <div class="sn-step active" id="sn1">
+                <span class="sn-num">01</span>
+                <span class="sn-label">CIPHER LOCK</span>
+            </div>
+            <div class="sn-arrow">▶</div>
+            <div class="sn-step" id="sn2">
+                <span class="sn-num">02</span>
+                <span class="sn-label">SIGNAL TAP</span>
+            </div>
+            <div class="sn-arrow">▶</div>
+            <div class="sn-step" id="sn3">
+                <span class="sn-num">03</span>
+                <span class="sn-label">PRIME CORE</span>
+            </div>
+            <div class="sn-arrow">▶</div>
+            <div class="sn-step" id="sn4">
+                <span class="sn-num">∞</span>
+                <span class="sn-label">VAULT</span>
+            </div>
+        </div>
+        <div class="sn-right">
+            INTRUSIONS: <span id="global-attempts" style="color:var(--s1-col)">0</span>
+        </div>
+    </div>
+
+    <!-- =========================================
+       MODULE 01
+       ========================================= -->
+    <div id="stage-1" class="stage s1 active">
+
+        <aside class="s1-left">
+            <div class="term-win">
+                <div class="term-bar">
+                    <div class="tdot r"></div>
+                    <div class="tdot y"></div>
+                    <div class="tdot g"></div>
+                    <span class="term-title">root@specter-core — shell</span>
+                </div>
+                <div class="term-out" id="term-out">
+                    <div class="tl"><span class="tc-ok">BOOT</span> Loading SPECTER kernel...</div>
+                    <div class="tl"><span class="tc-ok">OK </span> CPU: HELIX-9 [48-core @ 3.8GHz]</div>
+                    <div class="tl"><span class="tc-ok">OK </span> RAM: 256GB ECC online</div>
+                    <div class="tl"><span class="tc-ok">OK </span> Crypto-bus: AES-512 active</div>
+                    <div class="tl"><span class="tc-warn">WARN</span> Physical perimeter breach detected</div>
+                    <div class="tl"><span class="tc-err">ERR </span> Vault override PIN: REQUIRED</div>
+                    <div class="tl"><span class="tc-ok">SYS </span> Loading sys-module-1... [OK]</div>
+                    <div class="tl"><span class="tc-ok">SYS </span> Loading sys-module-2... [OK]</div>
+                    <div class="tl"><span class="tc-warn">PEND</span> sys-module-3 auth key... PENDING</div>
+                    <div class="tl"><span class="tc-ok">SYS </span> Session: 0xF3A9D7B2</div>
+                    <div class="tl"><span class="tc-err">SEC </span> LOCKDOWN PROTOCOL ENGAGED</div>
+                    <div class="tl blink">█</div>
+                </div>
+            </div>
+            <div class="mem-dump">
+                <div class="mem-label">&#47;&#47; MEM DUMP [0x00FF2A00]</div>
+                <div id="mem-content"></div>
+            </div>
+        </aside>
+
+        <main class="s1-right">
+            <div class="vault-shell s1-shell">
+                <div class="vs-top">
+                    <div class="vs-logo">SPECTER</div>
+                    <div class="vs-sub">CIPHER LOCK &nbsp;·&nbsp; STAGE 01 OF 03</div>
+                    <div class="vs-rules"
+                        style="font-size: 0.5rem; color: rgba(0, 229, 255, 0.4); margin-top: 6px; letter-spacing: 0.05em; text-transform: uppercase;">
+                        ▶ RULE 01: Answers are never in plain text. Reverse-engineer the systems.</div>
+                    <div class="vs-warn" id="s1-intru">INTRUSION COUNTER: <span id="s1-att">0</span></div>
+                </div>
+
+                <div class="v-screen s1-screen" id="s1-screen">
+                    <div class="scn-scan"></div>
+                    <div class="scn-label">ENTER 6-DIGIT OVERRIDE PIN</div>
+                    <div class="pin-row" id="s1-pin-row">
+                        <span class="pdig empty" id="p0">—</span>
+                        <span class="pdig empty" id="p1">—</span>
+                        <span class="pdig empty" id="p2">—</span>
+                        <span class="pdig empty" id="p3">—</span>
+                        <span class="pdig empty" id="p4">—</span>
+                        <span class="pdig empty" id="p5">—</span>
+                    </div>
+                    <div class="scn-msg" id="s1-msg">&gt;_ AWAITING OVERRIDE SEQUENCE</div>
+                </div>
+
+                <div class="keypad">
+                    <button class="k" onclick="s1Key(1)">1</button>
+                    <button class="k" onclick="s1Key(2)">2</button>
+                    <button class="k" onclick="s1Key(3)">3</button>
+                    <button class="k" onclick="s1Key(4)">4</button>
+                    <button class="k" onclick="s1Key(5)">5</button>
+                    <button class="k" onclick="s1Key(6)">6</button>
+                    <button class="k" onclick="s1Key(7)">7</button>
+                    <button class="k" onclick="s1Key(8)">8</button>
+                    <button class="k" onclick="s1Key(9)">9</button>
+                    <button class="k fn red-k" onclick="s1Clr()">CLR</button>
+                    <button class="k" onclick="s1Key(0)">0</button>
+                    <button class="k fn grn-k" onclick="s1Sub()">ENT↵</button>
+                </div>
+
+                <div class="vs-foot">
+                    <span>STATUS: <span class="ft-locked" id="s1-status">LOCKED</span></span>
+                    <span>CHANNEL: ENCRYPTED</span>
+                    <span>0xF3A9D7B2</span>
+                </div>
+            </div>
+        </main>
+
+    </div>
+
+    <!-- =========================================
+       MODULE 02
+       ========================================= -->
+    <div id="stage-2" class="stage s2">
+
+        <div class="s2-inner">
+
+            <div class="s2-header">
+                <div class="s2-title">SIGNAL TAP <span class="s2-sub">// INTERCEPTED TRANSMISSION</span></div>
+                <div class="s2-desc">A hostile signal was captured on frequency 1337.MHz. The payload is XOR-encrypted.
+                    Decrypt it to proceed.</div>
+            </div>
+
+            <!-- Oscilloscope -->
+            <div class="osc-box">
+                <canvas id="osc-canvas" width="800" height="90"></canvas>
+            </div>
+
+            <!-- Cipher Challenge -->
+            <div class="s2-challenge">
+                <div class="s2-panel">
+                    <div class="s2-pan-label">INTERCEPTED PAYLOAD (HEX)</div>
+                    <div class="s2-hex-display">
+                        <span class="hb">0x44</span>
+                        <span class="hb">0x5E</span>
+                        <span class="hb">0x50</span>
+                        <span class="hb">0x5A</span>
+                        <span class="hb">0x56</span>
+                    </div>
+                    <div class="s2-pan-label" style="margin-top:1.2rem">XOR KEY</div>
+                    <div class="s2-key-display">0x17</div>
+                </div>
+                <div class="s2-panel s2-help">
+                    <div class="s2-pan-label">ANALYST NOTES</div>
+                    <div class="s2-note">Each byte of the payload was XOR'd with the key. To recover the original text,
+                        XOR each byte with 0x17 again.</div>
+                    <div class="s2-note">Try in console:
+                        <code>String.fromCharCode(...[0x44,0x5E,0x50,0x5A,0x56].map(b=>b^0x17))</code>
+                    </div>
+                    <div class="s2-note">Or Python:
+                        <code>print(''.join(chr(b^0x17) for b in [0x44,0x5E,0x50,0x5A,0x56]))</code>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input -->
+            <div class="s2-input-row">
+                <div class="s2-input-label">&gt;_ ENTER DECRYPTED KEYWORD:</div>
+                <div class="s2-input-wrap">
+                    <input type="text" id="s2-input" class="s2-input" placeholder="TYPE RESULT HERE..."
+                        autocomplete="off" spellcheck="false" />
+                    <button class="s2-btn" onclick="s2Sub()">TRANSMIT</button>
+                </div>
+                <div class="s2-msg" id="s2-msg"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- =========================================
+       MODULE 03
+       ========================================= -->
+    <div id="stage-3" class="stage s3">
+
+        <div class="s3-inner">
+
+            <div class="s3-header">
+                <div class="s3-title">PRIME CORE <span class="s3-sub">// MATHEMATICAL OVERRIDE</span></div>
+                <div class="s3-desc">The final cryptographic gate uses a mathematical key derivation function. Compute
+                    the answer to unlock the vault.</div>
+            </div>
+
+            <!-- Matrix grid decoration -->
+            <div class="s3-grid-wrap">
+                <canvas id="prime-canvas" width="700" height="160"></canvas>
+            </div>
+
+            <!-- The challenge -->
+            <div class="s3-challenge">
+                <div class="s3-block">
+                    <div class="s3-block-label">GATE DEFINITION</div>
+                    <div class="s3-eq">
+                        <span class="eq-kw">KEY</span> = <span class="eq-fn">FibPrime</span>(<span
+                            class="eq-num">6</span>)
+                    </div>
+                    <div class="s3-rule">Where <code>FibPrime(n)</code> = the n<sup>th</sup> element of the set of
+                        numbers that are <strong>both prime AND a Fibonacci number</strong> (1-indexed).</div>
+                </div>
+
+                <div class="s3-block">
+                    <div class="s3-block-label">FIBONACCI SEQUENCE (partial)</div>
+                    <div class="fib-seq" id="fib-seq">
+                        <span class="fv">1</span><span class="fv">1</span><span class="fv">2</span>
+                        <span class="fv prime-fv">3</span><span class="fv prime-fv">5</span>
+                        <span class="fv">8</span><span class="fv prime-fv">13</span><span class="fv">21</span>
+                        <span class="fv">34</span><span class="fv">55</span><span class="fv">89</span>
+                        <span class="fv">144</span><span class="fv prime-fv">233</span><span
+                            class="fv ellipsis">...</span>
+                    </div>
+                    <div class="s3-fib-note"><span class="prime-dot">■</span> = also prime &nbsp;·&nbsp; Highlighted
+                        values are FibPrimes</div>
+                </div>
+            </div>
+
+            <!-- Input -->
+            <div class="s3-input-row">
+                <div class="s3-input-label">&gt;_ ENTER KEY VALUE:</div>
+                <div class="s3-input-wrap">
+                    <input type="number" id="s3-input" class="s3-input" placeholder="0" autocomplete="off" />
+                    <button class="s3-btn" onclick="s3Sub()">EXECUTE</button>
+                </div>
+                <div class="s3-msg" id="s3-msg"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- =========================================
+       MODULE 04
+       ========================================= -->
+    <div id="stage-final" class="stage s-final">
+        <canvas id="final-canvas"></canvas>
+
+        <div class="final-inner" id="final-inner">
+
+            <!-- The Vault Door -->
+            <div class="vault-perspective" id="vault-persp">
+                <div class="vault-door-wrap" id="vault-door-wrap">
+                    <div class="vault-front">
+                        <!-- SVG Vault Door -->
+                        <svg id="vault-svg" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <radialGradient id="gSteel" cx="40%" cy="35%">
+                                    <stop offset="0%" stop-color="#4a4a5a" />
+                                    <stop offset="100%" stop-color="#1a1a22" />
+                                </radialGradient>
+                                <radialGradient id="gBolt" cx="35%" cy="35%">
+                                    <stop offset="0%" stop-color="#666" />
+                                    <stop offset="100%" stop-color="#222" />
+                                </radialGradient>
+                            </defs>
+                            <!-- Door body -->
+                            <circle cx="150" cy="150" r="145" fill="url(#gSteel)" stroke="#555" stroke-width="3" />
+                            <!-- Outer ring -->
+                            <circle cx="150" cy="150" r="138" fill="none" stroke="#3a3a4a" stroke-width="4" />
+                            <!-- Second ring -->
+                            <circle cx="150" cy="150" r="115" fill="none" stroke="#2e2e3e" stroke-width="3" />
+                            <!-- Third ring -->
+                            <circle cx="150" cy="150" r="90" fill="none" stroke="#252535" stroke-width="2" />
+                            <!-- 6 Bolts at 60° intervals — they will retract -->
+                            <g id="vault-bolts">
+                                <circle class="vbolt" cx="150" cy="9" r="11" fill="url(#gBolt)" stroke="#666"
+                                    stroke-width="1.5" />
+                                <circle class="vbolt" cx="276" cy="79" r="11" fill="url(#gBolt)" stroke="#666"
+                                    stroke-width="1.5" />
+                                <circle class="vbolt" cx="276" cy="221" r="11" fill="url(#gBolt)" stroke="#666"
+                                    stroke-width="1.5" />
+                                <circle class="vbolt" cx="150" cy="291" r="11" fill="url(#gBolt)" stroke="#666"
+                                    stroke-width="1.5" />
+                                <circle class="vbolt" cx="24" cy="221" r="11" fill="url(#gBolt)" stroke="#666"
+                                    stroke-width="1.5" />
+                                <circle class="vbolt" cx="24" cy="79" r="11" fill="url(#gBolt)" stroke="#666"
+                                    stroke-width="1.5" />
+                            </g>
+                            <!-- Center wheel -->
+                            <g id="vault-wheel">
+                                <circle cx="150" cy="150" r="42" fill="#111" stroke="#444" stroke-width="3" />
+                                <!-- Spokes -->
+                                <line x1="108" y1="150" x2="192" y2="150" stroke="#555" stroke-width="7"
+                                    stroke-linecap="round" />
+                                <line x1="150" y1="108" x2="150" y2="192" stroke="#555" stroke-width="7"
+                                    stroke-linecap="round" />
+                                <line x1="120" y1="120" x2="180" y2="180" stroke="#555" stroke-width="7"
+                                    stroke-linecap="round" />
+                                <line x1="180" y1="120" x2="120" y2="180" stroke="#555" stroke-width="7"
+                                    stroke-linecap="round" />
+                                <!-- Hub -->
+                                <circle cx="150" cy="150" r="14" fill="#222" stroke="#666" stroke-width="2" />
+                                <circle cx="150" cy="150" r="5" fill="#444" />
+                            </g>
+                            <!-- Subtle grid texture -->
+                            <circle cx="150" cy="150" r="65" fill="none" stroke="#202030" stroke-width="1" />
+                        </svg>
+                    </div>
+                    <!-- Back face content (revealed after door opens) -->
+                    <div class="vault-back">
+                        <div class="vault-glow-inner">
+                            <div class="vb-label">PAYLOAD DECRYPTED</div>
+                            <div class="vb-flag" id="vb-flag"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Text below door (hidden until after swing) -->
+            <div class="final-text" id="final-text">
+                <div class="ft-title" id="ft-title"></div>
+                <div class="ft-flag-wrap" id="ft-flag-wrap">
+                    <div class="ft-tag">CLEARANCE GRANTED — PAYLOAD:</div>
+                    <div class="ft-flag" id="ft-flag">[ ENCRYPTED ]</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- =========================================================
+       TRANSITION OVERLAY
+       ========================================================= -->
+    <div id="trans-overlay" class="trans-overlay">
+        <canvas id="trans-canvas"></canvas>
+        <div class="trans-text" id="trans-text"></div>
+        <div class="trans-sub" id="trans-sub"></div>
+    </div>
+
+    <!-- Lockdown Overlay -->
+    <div id="lockdown-overlay" class="lockdown-overlay">
+        <div class="ldo-text">⚡ LOCKDOWN PROTOCOL ⚡</div>
+        <div class="ldo-sub">System cooling down — <span id="ldo-timer">10</span>s</div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
